@@ -1,3 +1,20 @@
+<?php
+if(!empty($_POST["send"])) {
+	$name = $_POST["userName"];
+	$email = $_POST["userEmail"];
+	$subject = $_POST["subject"];
+	$content = $_POST["content"];
+
+	$toEmail = "admin@phppot_samples.com";
+	$mailHeaders = "From: " . $name . "<". $email .">\r\n";
+	if(mail($toEmail, $subject, $content, $mailHeaders)) {
+	    $message = "Your contact information is received successfully.";
+	    $type = "success";
+	}
+}
+require_once "database.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +42,11 @@
 
 
 </head>
+
+
+
+
+
 
 <body data-spy="scroll" data-offset="64" data-target="#section-topbar">
 
@@ -262,39 +284,100 @@
             <p>
               <sm>CONTACT FORM</sm>
             </p>
-            <form class="contact-form php-mail-form" role="form" action="contactform/contactform.php" method="POST">
 
-              <div class="form-group">
-                <label for="contact-name">Your Name</label>
-                <input type="name" name="name" class="form-control" id="contact-name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
-                <div class="validate"></div>
-              </div>
-              <div class="form-group">
-                <label for="contact-email">Your Email</label>
-                <input type="email" name="email" class="form-control" id="contact-email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email">
-                <div class="validate"></div>
-              </div>
-              <div class="form-group">
-                <label for="contact-subject">Subject</label>
-                <input type="text" name="subject" class="form-control" id="contact-subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject">
-                <div class="validate"></div>
-              </div>
 
-              <div class="form-group">
-                <label for="contact-message">Your Message</label>
-                <textarea class="form-control" name="message" id="contact-message" placeholder="Your Message" rows="5" data-rule="required" data-msg="Please write something for us"></textarea>
-                <div class="validate"></div>
-              </div>
 
-              <div class="loading"></div>
-              <div class="error-message"></div>
-              <div class="sent-message">Your message has been sent. Thank you!</div>
 
-              <div class="form-send">
-                <button type="submit" class="btn btn-large">Send Message</button>
-              </div>
+            <div class="contact-form php-mail-form">
+              <form name="frmContact" id="" frmContact"" method="post"
+                  action="" enctype="multipart/form-data"
+                  onsubmit="return validateContactForm()">
+      
+                  <div class="form-group">
+                      <label style="padding-top: 20px;">Name</label> <span
+                          id="userName-info" class="info"></span><br /> <input
+                          type="text" class="form-control" name="userName"
+                          id="userName" />
+                  </div>
+                  <div class="form-group">
+                      <label>Email</label> <span id="userEmail-info"
+                          class="info"></span><br /> <input type="text"
+                          class="form-control" name="userEmail" id="userEmail" />
+                  </div>
+                  <div class="form-group">
+                      <label>Subject</label> <span id="subject-info"
+                          class="info"></span><br /> <input type="text"
+                          class="form-control" name="subject" id="subject" />
+                  </div>
+                  <div class="form-group">
+                      <label>Message</label> <span id="userMessage-info"
+                          class="info"></span><br />
+                      <textarea name="content" id="content"
+                          class="form-control" cols="60" rows="6"></textarea>
+                  </div>
+                  <div>
+                    <div class="form-send">
+                      <input type="submit" name="send" class="btn btn-large"
+                          value="Send" />
+                          </div>
+      
+                      <div id="statusMessage"> 
+                              <?php
+                              if (! empty($message)) {
+                                  ?>
+                                  <p class='<?php echo $type; ?>Message'><?php echo $message; ?></p>
+                              <?php
+                              }
+                              ?>
+                          </div>
+                  </div>
+              </form>
+          </div>
+      
+          <script src="https://code.jquery.com/jquery-2.1.1.min.js"
+              type="text/javascript"></script>
+          <script type="text/javascript">
+              function validateContactForm() {
+                  var valid = true;
+      
+                  $(".info").html("");
+                  $(".input-field").css('border', '#e0dfdf 1px solid');
+                  var userName = $("#userName").val();
+                  var userEmail = $("#userEmail").val();
+                  var subject = $("#subject").val();
+                  var content = $("#content").val();
+                  
+                  if (userName == "") {
+                      $("#userName-info").html("Required.");
+                      $("#userName").css('border', '#e66262 1px solid');
+                      valid = false;
+                  }
+                  if (userEmail == "") {
+                      $("#userEmail-info").html("Required.");
+                      $("#userEmail").css('border', '#e66262 1px solid');
+                      valid = false;
+                  }
+                  if (!userEmail.match(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/))
+                  {
+                      $("#userEmail-info").html("Invalid Email Address.");
+                      $("#userEmail").css('border', '#e66262 1px solid');
+                      valid = false;
+                  }
+      
+                  if (subject == "") {
+                      $("#subject-info").html("Required.");
+                      $("#subject").css('border', '#e66262 1px solid');
+                      valid = false;
+                  }
+                  if (content == "") {
+                      $("#userMessage-info").html("Required.");
+                      $("#content").css('border', '#e66262 1px solid');
+                      valid = false;
+                  }
+                  return valid;
+              }
+      </script>
 
-            </form>
 
           </div>
         </div>
